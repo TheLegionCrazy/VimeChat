@@ -21,7 +21,7 @@ public class Api {
      * @apiNote возвращает null, если игрок не замучен
      * @see net.xtrafrancyz.vime.VimeChat.MuteManager.MuteInfo
      */
-    public static MuteManager.MuteInfo getMute(String player) {
+    public MuteManager.MuteInfo getMute(String player) {
         return getMutes().get(player);
     }
     
@@ -31,7 +31,7 @@ public class Api {
      * @param time   время в минутах
      * @throws IllegalArgumentException если player или reason blank (StringUtils.isBlank(String s)). Если minutes меньше либо равны 0
      */
-    public static void mute(String player, String reason, int time) throws IllegalArgumentException {
+    public void mute(String player, String reason, int time) throws IllegalArgumentException {
         if (StringUtils.isBlank(player))
             throw new IllegalArgumentException("Player could be nonNull");
         if (StringUtils.isBlank(reason))
@@ -46,7 +46,7 @@ public class Api {
      * @param player игрок, которого хотите замутить
      * @throws IllegalArgumentException если игрок не в муте
      */
-    public static void unmute(String player) throws IllegalArgumentException {
+    public void unmute(String player) throws IllegalArgumentException {
         if (!manager.unMute(player))
             throw new IllegalArgumentException(player + " not muted");
     }
@@ -54,7 +54,7 @@ public class Api {
     /**
      * @return список всех мутов
      */
-    public static Map<String, MuteManager.MuteInfo> getMutes() {
+    public Map<String, MuteManager.MuteInfo> getMutes() {
         return manager.getMutes();
     }
 }
