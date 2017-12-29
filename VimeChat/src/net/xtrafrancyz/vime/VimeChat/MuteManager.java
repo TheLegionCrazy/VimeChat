@@ -1,4 +1,4 @@
-﻿package net.xtrafrancyz.vime.VimeChat;
+package net.xtrafrancyz.vime.VimeChat;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
