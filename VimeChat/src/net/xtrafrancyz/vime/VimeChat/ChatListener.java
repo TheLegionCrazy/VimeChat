@@ -1,10 +1,9 @@
 package net.xtrafrancyz.vime.VimeChat;
 
-import com.civcraft.main.CivGlobal;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -42,17 +41,13 @@ public class ChatListener implements Listener {
         return true;
     }
     
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onChat(final AsyncPlayerChatEvent event) {
-        if (event.isCancelled())
-            return;
-        
         final Response res = processChat(event.getPlayer(), event.getMessage());
         event.setMessage(res.message);
         
-        if (res.messageToPlayer != null) {
+        if (res.messageToPlayer != null)
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', res.messageToPlayer)), 1);
-        }
     }
     
     public Response processChat(final Player player, String message) {
@@ -110,20 +105,17 @@ public class ChatListener implements Listener {
                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.mute.mute("#antiflood", player.getName(), Main.muteTimeFlood, "Флуд"), 1);
                 }
             }
-            
-            if (!CivGlobal.getResident(player.getName()).isInteractiveMode()) {
-                if (!muted && minfo.equals(pinfo.messages.getLast())) {
-                    res.messageToPlayer = "&f[&cАнтиФлуд&f]&6 Ваше сообщение идентично предыдущему. В следующий раз вы будете замучены.";
-                    if (pinfo.messages.size() > 1) {
-                        MessageInfo prelast = pinfo.messages.get(pinfo.messages.size() - 2);
-                        if (System.currentTimeMillis() - prelast.time < 20 * 1000 && prelast.equals(minfo)) {
-                            res.messageToPlayer = null;
-                            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.mute.mute("#antiflood", player.getName(), Main.muteTimeFlood, "Флуд"), 1);
-                        }
+            if (!muted && minfo.equals(pinfo.messages.getLast())) {
+                res.messageToPlayer = "&f[&cАнтиФлуд&f]&6 Ваше сообщение идентично предыдущему. В следующий раз вы будете замучены.";
+                if (pinfo.messages.size() > 1) {
+                    MessageInfo prelast = pinfo.messages.get(pinfo.messages.size() - 2);
+                    if (System.currentTimeMillis() - prelast.time < 20 * 1000 && prelast.equals(minfo)) {
+                        res.messageToPlayer = null;
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.mute.mute("#antiflood", player.getName(), Main.muteTimeFlood, "Флуд"), 1);
                     }
                 }
-                
             }
+            
         }
         
         pinfo.messages.addLast(minfo);
@@ -132,7 +124,7 @@ public class ChatListener implements Listener {
     }
     
     public static class Response {
-        public String message = null;
+        public String message;
         public String messageToPlayer = null;
         
         public Response(String message) {
@@ -141,7 +133,7 @@ public class ChatListener implements Listener {
     }
     
     public static class PlayerInfo {
-        public LinkedList<MessageInfo> messages = new LinkedList<MessageInfo>();
+        public LinkedList<MessageInfo> messages = new LinkedList<>();
         public long lastCaps = 0;
         
         public void limitMessages(int max) {

@@ -1,8 +1,6 @@
-package net.xtrafrancyz.vime.VimeChat;
+﻿package net.xtrafrancyz.vime.VimeChat;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -77,15 +75,6 @@ public final class MuteManager implements Listener {
     }
     
     public boolean mute(String admin, String player, int time, String reason) {
-        Player playerToMute = plugin.getServer().getPlayer(player);
-        OfflinePlayer playerLeaver = null;
-        
-        if (playerToMute == null)
-            playerLeaver = Bukkit.getOfflinePlayer(player);
-        
-        if (playerLeaver == null)
-            return false;
-        
         String timeMsg;
         if (time == 0)
             timeMsg = "всегда.";

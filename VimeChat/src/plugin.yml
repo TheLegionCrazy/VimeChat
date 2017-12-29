@@ -1,6 +1,6 @@
 name: VimeChat
 main: net.xtrafrancyz.vime.VimeChat.Main
-version: 1.4
+version: 1.5
 author: xtrafrancyz
 website: http://xtrafrancyz.net
 loadbefore: [Essentials]

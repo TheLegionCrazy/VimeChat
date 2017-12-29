@@ -25,6 +25,7 @@ public class Main extends JavaPlugin {
     public static final int muteTimeCaps = 10;
     public static boolean usePex;
     public MuteManager mute;
+    private static Api api;
     
     @Override
     public void onEnable() {
@@ -33,6 +34,7 @@ public class Main extends JavaPlugin {
         
         mute = new MuteManager(this);
         mute.load();
+        api = new Api(mute);
         
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         
@@ -124,5 +126,13 @@ public class Main extends JavaPlugin {
             return true;
         }
         
+    }
+    
+    /**
+     * @return Api VimeChat'а
+     * @see Api
+     */
+    public static Api getApi() {
+        return api;
     }
 }
