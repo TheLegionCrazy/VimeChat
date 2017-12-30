@@ -85,7 +85,8 @@ public class ChatListener implements Listener {
         if (capsWords > 2) {
             if (System.currentTimeMillis() - pinfo.lastCaps < 60 * 1000) {
                 muted = true;
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.mute.mute("#antiflood", player.getName(), Main.muteTimeCaps, "Капс"), 1);
+                if (Main.getApi().getMute(player.getName()) == null)
+                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.mute.mute("#antiflood", player.getName(), Main.muteTimeCaps, "Капс"), 1);
             } else {
                 res.messageToPlayer = "&f[&cАнтиФлуд&f]&6 Отключите Caps Lock или вы будете замучены.";
             }
@@ -101,7 +102,8 @@ public class ChatListener implements Listener {
                 }
                 if (maxDelay < 2 * 1000) {
                     muted = true;
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.mute.mute("#antiflood", player.getName(), Main.muteTimeFlood, "Флуд"), 1);
+                    if (Main.getApi().getMute(player.getName()) == null)
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.mute.mute("#antiflood", player.getName(), Main.muteTimeFlood, "Флуд"), 1);
                 }
             }
             if (!muted && minfo.equals(pinfo.messages.getLast())) {
@@ -110,7 +112,8 @@ public class ChatListener implements Listener {
                     MessageInfo prelast = pinfo.messages.get(pinfo.messages.size() - 2);
                     if (System.currentTimeMillis() - prelast.time < 20 * 1000 && prelast.equals(minfo)) {
                         res.messageToPlayer = null;
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.mute.mute("#antiflood", player.getName(), Main.muteTimeFlood, "Флуд"), 1);
+                        if (Main.getApi().getMute(player.getName()) == null)
+                            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.mute.mute("#antiflood", player.getName(), Main.muteTimeFlood, "Флуд"), 1);
                     }
                 }
             }
