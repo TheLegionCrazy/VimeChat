@@ -3,7 +3,6 @@ package net.xtrafrancyz.vime.VimeChat;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -41,7 +40,7 @@ public class ChatListener implements Listener {
         return true;
     }
     
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true)
     public void onChat(final AsyncPlayerChatEvent event) {
         final Response res = processChat(event.getPlayer(), event.getMessage());
         event.setMessage(res.message);
@@ -119,7 +118,7 @@ public class ChatListener implements Listener {
         }
         
         pinfo.messages.addLast(minfo);
-        pinfo.limitMessages(4);
+        pinfo.limitMessages(9);
         return res;
     }
     
