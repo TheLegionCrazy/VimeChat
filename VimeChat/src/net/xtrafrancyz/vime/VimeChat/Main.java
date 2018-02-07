@@ -76,7 +76,8 @@ public class Main extends JavaPlugin {
                             time = Integer.parseInt(args[1]);
                             i = 2;
                         } catch (NumberFormatException e) {
-                            time = 0;
+                            sender.sendMessage(ChatColor.RED + "Укажите время мута. Вечный мут выключен.");
+                            return false;
                         }
                     for (; i < args.length; i++)
                         reason += args[i] + (i == args.length - 1 ? "" : " ");
