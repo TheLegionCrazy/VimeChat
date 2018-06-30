@@ -23,8 +23,8 @@ public class ChatListener implements Listener {
         this.plugin = plugin;
         players.clear();
     }
-    
-    public static String implode(String[] arr, String splitter) {
+
+    private static String implode(String[] arr, String splitter) {
         if (arr.length == 0)
             return "";
         StringBuilder sb = new StringBuilder(arr[0]);
@@ -32,8 +32,8 @@ public class ChatListener implements Listener {
             sb.append(splitter).append(arr[i]);
         return sb.toString();
     }
-    
-    public static boolean isUpperCase(String str) {
+
+    private static boolean isUpperCase(String str) {
         for (char c : str.toCharArray())
             if (!Character.isUpperCase(c))
                 return false;
@@ -48,8 +48,8 @@ public class ChatListener implements Listener {
         if (res.messageToPlayer != null)
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', res.messageToPlayer)), 1);
     }
-    
-    public Response processChat(final Player player, String message) {
+
+    private Response processChat(final Player player, String message) {
         
         message = message
             //восклицательные и вопросительные знаки не больше одного

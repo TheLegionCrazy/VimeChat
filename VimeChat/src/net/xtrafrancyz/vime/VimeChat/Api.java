@@ -8,13 +8,13 @@ import java.util.Map;
  * Created by TheLegion on 30.12.2017 (December) 1:26
  */
 public class Api {
-    
-    public static MuteManager manager;
-    
+
+    private static MuteManager manager;
+
     public Api(MuteManager manager) {
-        this.manager = manager;
+        Api.manager = manager;
     }
-    
+
     /**
      * @param player имя игрока. которого вы ищите
      * @return MuteManager с игроком
@@ -24,33 +24,42 @@ public class Api {
     public MuteManager.MuteInfo getMute(String player) {
         return getMutes().get(player);
     }
-    
+
     /**
      * @param player игрок, которого хотите замутить
      * @param reason причина мута
      * @param time   время в минутах
+     * @return Результат
      * @throws IllegalArgumentException если player или reason blank (StringUtils.isBlank(String s)). Если minutes меньше либо равны 0
      */
-    public void mute(String player, String reason, int time) throws IllegalArgumentException {
+    public boolean mute(String player, String reason, int time) throws IllegalArgumentException {
         if (StringUtils.isBlank(player))
             throw new IllegalArgumentException("Player could be nonNull");
         if (StringUtils.isBlank(reason))
             throw new IllegalArgumentException("Reason could be nonNull");
         if (time <= 0)
             throw new IllegalArgumentException("Time could be greater than 0");
-        
-        manager.mute("VimeWorld", player, time, reason);
+
+        return manager.mute("VimeWorld", player, time, reason);
     }
-    
+
     /**
      * @param player игрок, которого хотите замутить
-     * @throws IllegalArgumentException если игрок не в муте
+     * @return Результат
      */
-    public void unmute(String player) throws IllegalArgumentException {
-        if (!manager.unMute(player))
-            throw new IllegalArgumentException(player + " not muted");
+    public boolean unmute(String player) throws IllegalArgumentException {
+        return manager.unMute(player, "VimeWorld");
     }
-    
+
+    /**
+     * @param player  тот, которому нужно поменять мут
+     * @param newTime новое время
+     * @return Результат
+     */
+    public boolean editmute(String player, int newTime) throws IllegalArgumentException {
+        return manager.editMute("VimeWorld", player, newTime);
+    }
+
     /**
      * @return список всех мутов
      */

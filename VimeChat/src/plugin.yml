@@ -1,6 +1,6 @@
 name: VimeChat
 main: net.xtrafrancyz.vime.VimeChat.Main
-version: 1.5
+version: 1.6
 author: xtrafrancyz
 website: http://xtrafrancyz.net
 loadbefore: [Essentials]
@@ -18,6 +18,10 @@ commands:
     description: Показывает замученных игроков
     usage: /mutelist
     permission: vimechat.mutelist
+  emute:
+    description: Изменяет время мута у игрока
+    usage: /mutelist <player> <time>
+    permission: vimechat.emute
 
 permissions:
   vimechat.*:
@@ -26,9 +30,12 @@ permissions:
       vimechat.mute: true
       vimechat.unmute: true
       vimechat.mutelist: true
+      vimechat.emute: true
   vimechat.unmute:
     default: op
   vimechat.mute:
     default: op
   vimechat.mutelist:
+    default: op
+  vimechat.emute:
     default: op
