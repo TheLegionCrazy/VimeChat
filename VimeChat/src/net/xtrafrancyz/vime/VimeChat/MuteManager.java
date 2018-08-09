@@ -41,32 +41,30 @@ public final class MuteManager implements Listener {
     /**
      * @param n     число
      * @param form1 1 письмо, минута
-     * @param form2 2 письма, минуты
-     * @param form3 90 писем, минут
      * @return правильная множественная форма
      */
-    public static String plurals(int n, String form1, String form2, String form3) {
+    static String plurals(int n, String form1) {
         if (n == 0) {
-            return form3;
+            return "минут";
         }
 
         n = Math.abs(n) % 100;
 
         if (n > 10 && n < 20) {
-            return form3;
+            return "минут";
         }
 
         n = n % 10;
 
         if (n > 1 && n < 5) {
-            return form2;
+            return "минуты";
         }
 
         if (n == 1) {
             return form1;
         }
 
-        return form3;
+        return "минут";
     }
 
     private String getPrefix(String admin) {
@@ -107,14 +105,15 @@ public final class MuteManager implements Listener {
         if (time == 0) {
             timeMsg = "всегда.";
         } else {
-            timeMsg = time + "&e " + plurals(time, "минуту", "минуты", "минут");
+            timeMsg = time + "&e " + plurals(time, "минуту");
         }
 
         return timeMsg;
     }
 
 
-    public boolean mute(String admin, String player, int time, String reason) {
+    @SuppressWarnings("SameReturnValue")
+    boolean mute(String admin, String player, int time, String reason) {
         String printableReason = "";
         if (reason.length() > 0)
             printableReason = " &eПричина: &a" + reason + "&e.";
@@ -132,7 +131,7 @@ public final class MuteManager implements Listener {
         return true;
     }
 
-    public boolean unMute(String player, String sender) {
+    boolean unMute(String player, String sender) {
         if (isMuted(player)) {
             mutedPlayers.remove(player);
             plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&',
@@ -143,7 +142,7 @@ public final class MuteManager implements Listener {
         return false;
     }
 
-    public boolean editMute(String admin, String player, int newTime) {
+    boolean editMute(String admin, String player, int newTime) {
         if (isMuted(player)) {
             MuteInfo mute = mutedPlayers.remove(player);
             mute.admin = admin;
@@ -158,7 +157,7 @@ public final class MuteManager implements Listener {
         return false;
     }
 
-    public boolean isMuted(String player) {
+    private boolean isMuted(String player) {
         return mutedPlayers.containsKey(player);
     }
 
@@ -168,11 +167,11 @@ public final class MuteManager implements Listener {
             MuteInfo mi = mutedPlayers.get(event.getPlayer().getName());
             int minutes = (int) Math.ceil((mi.muteto - System.currentTimeMillis()) / 60000);
             event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.RED + "Вам запрещено писать в чат" + (mi.reason != null ? ". Причина: " + ChatColor.YELLOW + mi.reason : "") + ChatColor.RED + ". Осталось: " + ChatColor.YELLOW + minutes + " " + plurals(minutes, "минута", "минуты", "минут"));
+            event.getPlayer().sendMessage(ChatColor.RED + "Вам запрещено писать в чат" + (mi.reason != null ? ". Причина: " + ChatColor.YELLOW + mi.reason : "") + ChatColor.RED + ". Осталось: " + ChatColor.YELLOW + minutes + " " + plurals(minutes, "минута"));
         }
     }
 
-    public void startLoop() {
+    private void startLoop() {
         loop = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             for (Entry<String, MuteInfo> entry : mutedPlayers.entrySet())
                 if (entry.getValue().muteto > 0 && entry.getValue().muteto < System.currentTimeMillis()) {
@@ -184,11 +183,11 @@ public final class MuteManager implements Listener {
         }, 200, 50);
     }
 
-    public void stopLoop() {
+    void stopLoop() {
         plugin.getServer().getScheduler().cancelTask(loop);
     }
 
-    public void save() {
+    void save() {
         try {
             if (!saveFile.exists())
                 saveFile.createNewFile();
@@ -200,13 +199,13 @@ public final class MuteManager implements Listener {
         }
     }
 
-    public void load() {
+    void load() {
         if (!saveFile.exists()) {
             mutedPlayers = new ConcurrentHashMap<>();
         } else {
             try {
                 ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(saveFile)));
-                mutedPlayers = (Map) ois.readObject();
+                mutedPlayers = (Map<String, MuteInfo>) ois.readObject();
                 if (mutedPlayers instanceof HashMap) {
                     ConcurrentHashMap<String, MuteInfo> newmap = new ConcurrentHashMap<>();
                     for (Map.Entry<String, MuteInfo> e : mutedPlayers.entrySet())
@@ -221,16 +220,16 @@ public final class MuteManager implements Listener {
         }
     }
 
-    public Map<String, MuteInfo> getMutes() {
+    Map<String, MuteInfo> getMutes() {
         return mutedPlayers;
     }
 
-    public static class MuteInfo implements Serializable {
-        public String reason;
-        public String admin;
-        public long muteto;
+    static class MuteInfo implements Serializable {
+        String reason;
+        String admin;
+        long muteto;
 
-        public MuteInfo(String reason, long muteto, String admin) {
+        MuteInfo(String reason, long muteto, String admin) {
             this.reason = reason;
             this.muteto = muteto;
             this.admin = admin;
