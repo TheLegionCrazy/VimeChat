@@ -15,21 +15,21 @@ import java.util.Map;
  *
  * @author xtrafrancyz
  */
-class ChatListener implements Listener {
+public class ChatListener implements Listener {
     private static final Map<String, PlayerInfo> players = new HashMap<>();
     private final Main plugin;
 
-    ChatListener(Main plugin) {
+    public ChatListener(Main plugin) {
         this.plugin = plugin;
         players.clear();
     }
 
-    private static String implode(String[] arr) {
+    private static String implode(String[] arr, String splitter) {
         if (arr.length == 0)
             return "";
         StringBuilder sb = new StringBuilder(arr[0]);
         for (int i = 1; i < arr.length; i++)
-            sb.append(" ").append(arr[i]);
+            sb.append(splitter).append(arr[i]);
         return sb.toString();
     }
 
@@ -69,7 +69,7 @@ class ChatListener implements Listener {
                 words[i] = words[i].toLowerCase();
             }
         }
-        message = implode(words);
+        message = implode(words, " ");
         
         MessageInfo minfo = new MessageInfo(message, System.currentTimeMillis());
         Response res = new Response(message);
@@ -121,39 +121,39 @@ class ChatListener implements Listener {
         }
         
         pinfo.messages.addLast(minfo);
-        pinfo.limitMessages();
+        pinfo.limitMessages(9);
         return res;
     }
 
-    static class Response {
-        String message;
-        String messageToPlayer = null;
+    public static class Response {
+        public String message;
+        public String messageToPlayer = null;
 
-        Response(String message) {
+        public Response(String message) {
             this.message = message;
         }
     }
 
-    static class PlayerInfo {
-        LinkedList<MessageInfo> messages = new LinkedList<>();
-        long lastCaps = 0;
+    public static class PlayerInfo {
+        public LinkedList<MessageInfo> messages = new LinkedList<>();
+        public long lastCaps = 0;
 
-        void limitMessages() {
-            while (messages.size() > 9)
+        public void limitMessages(int max) {
+            while (messages.size() > max)
                 messages.removeFirst();
         }
     }
 
-    static class MessageInfo {
-        String message;
-        long time;
+    public static class MessageInfo {
+        public String message;
+        public long time;
 
-        MessageInfo(String message, long time) {
+        public MessageInfo(String message, long time) {
             this.message = message.replaceAll("[^\\wа-яА-Я\\- ]", "");
             this.time = time;
         }
 
-        boolean equals(MessageInfo i) {
+        public boolean equals(MessageInfo i) {
             return message.equals(i.message);
         }
     }

@@ -11,7 +11,7 @@ public class Api {
 
     private static MuteManager manager;
 
-    Api(MuteManager manager) {
+    public Api(MuteManager manager) {
         Api.manager = manager;
     }
 
@@ -21,7 +21,7 @@ public class Api {
      * @apiNote возвращает null, если игрок не замучен
      * @see net.xtrafrancyz.vime.VimeChat.MuteManager.MuteInfo
      */
-    MuteManager.MuteInfo getMute(String player) {
+    public MuteManager.MuteInfo getMute(String player) {
         return getMutes().get(player);
     }
 
@@ -63,7 +63,7 @@ public class Api {
     /**
      * @return список всех мутов
      */
-    private Map<String, MuteManager.MuteInfo> getMutes() {
+    public Map<String, MuteManager.MuteInfo> getMutes() {
         return manager.getMutes();
     }
 }

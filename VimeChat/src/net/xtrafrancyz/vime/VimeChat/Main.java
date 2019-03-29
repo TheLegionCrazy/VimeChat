@@ -111,7 +111,7 @@ public class Main extends JavaPlugin {
                                 String remaining;
                                 if (mi.muteto > 0) {
                                     int minutes = (int) Math.ceil((mi.muteto - System.currentTimeMillis()) / 60000);
-                                    remaining = minutes + " " + plurals(minutes, "минута");
+                                    remaining = minutes + " " + plurals(minutes, "минута", "минуты", "минут");
                                 } else {
                                     remaining = "Вечный мут";
                                 }
